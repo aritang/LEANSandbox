@@ -14,12 +14,16 @@ name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.34.1"
 
+
+[[require]]
+name = "checkdecls"
+git = "https://github.com/PatrickMassot/checkdecls.git"
 [[lean_lib]]
 name = "LEANSandbox"
 
 [[lean_lib]]
 name = "ExampleSubProject"
-globs = ["ExampleSubProject.+"]
+globs = ["ExampleSubProject.*"]
 [[lean_lib]]
 name = "CommHyp"
-globs = ["CommHyp.+"]
+globs = ["CommHyp.*"]

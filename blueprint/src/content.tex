@@ -1,0 +1,215 @@
+% In this file you should put the actual content of the blueprint.
+% It will be used both by the web and the print version.
+% It should *not* include the \begin{document}
+
+\chapter{The Revelation Principle for communication equilibria}
+
+Players $i \in N$ have finite type sets $T_i$ and action sets $A_i$. A
+communication device has finite message sets $M_i$ and signal sets $R_i$.
+Following Myerson (1982) and Forges (1986), we show that every
+communication-equilibrium outcome can be achieved by truthful-obedient play
+under a direct device.
+
+\section{Finite distributions}
+
+\begin{definition}[Finite distribution]
+  \label{def:findist}
+  \lean{FinDist}
+  \leanok
+  A distribution $\mu$ on a finite set $X$ is a weight $\mu(x) \ge 0$ for each
+  $x \in X$, with $\sum_x \mu(x) = 1$.
+\end{definition}
+
+\begin{definition}[Point mass, mixture, pushforward]
+  \label{def:findist-ops}
+  \lean{FinDist.pure, FinDist.bind, FinDist.map}
+  \leanok
+  \uses{def:findist}
+  The point mass $\delta_a$; the mixture
+  $(\mu \gg\!= f)(b) = \sum_a \mu(a)\, f(a)(b)$; and the pushforward
+  $f_*\mu$.
+\end{definition}
+
+\begin{definition}[Expectation]
+  \label{def:findist-E}
+  \lean{FinDist.E}
+  \leanok
+  \uses{def:findist}
+  $\mathbb{E}_\mu[g] = \sum_x \mu(x)\, g(x)$.
+\end{definition}
+
+\begin{definition}[Independent products]
+  \label{def:findist-prod}
+  \lean{FinDist.pi, FinDist.prod}
+  \leanok
+  \uses{def:findist}
+  The product of a family, $(\otimes_i \mu_i)(s) = \prod_i \mu_i(s_i)$, and of
+  a pair, $(\mu \otimes \nu)(a,b) = \mu(a)\,\nu(b)$.
+\end{definition}
+
+\section{Games, devices and equilibrium}
+
+\begin{definition}[Bayesian game]
+  \label{def:bayes-game}
+  \lean{BayesGame}
+  \leanok
+  \uses{def:findist}
+  A Bayesian game $G$ consists of a common prior $p$ on type profiles and
+  payoffs $u_i(a, t)$.
+\end{definition}
+
+\begin{definition}[Communication device]
+  \label{def:device}
+  \lean{Device}
+  \leanok
+  \uses{def:findist}
+  A device $d$ maps each message profile $m$ to a distribution $q(\cdot \mid m)$
+  of signal profiles.
+\end{definition}
+
+\begin{definition}[Strategies]
+  \label{def:strategies}
+  \lean{ReportRule, ActionRule, PureStrat, MixStrategyProfile}
+  \leanok
+  \uses{def:findist}
+  A pure strategy of player $i$ is a report rule $T_i \to M_i$ and an action
+  rule $T_i \times M_i \times R_i \to A_i$. A mixed strategy profile assigns
+  each player a distribution over pure strategies.
+\end{definition}
+
+\begin{definition}[Play and outcome]
+  \label{def:outcome}
+  \lean{play, outcome}
+  \leanok
+  \uses{def:device, def:strategies, def:findist-ops, def:findist-prod}
+  Given types $t$, players draw pure strategies independently, send messages,
+  receive signals from $d$, and act. The outcome $\mu(\cdot \mid t)$ is the
+  resulting distribution of action profiles.
+\end{definition}
+
+\begin{definition}[Payoff]
+  \label{def:payoff}
+  \lean{payoff}
+  \leanok
+  \uses{def:bayes-game, def:outcome, def:findist-E}
+  Player $i$'s ex-ante payoff is
+  $\mathbb{E}_{t \sim p}\, \mathbb{E}_{a \sim \mu(\cdot \mid t)}[u_i(a, t)]$.
+\end{definition}
+
+\begin{definition}[Communication equilibrium]
+  \label{def:comm-eq}
+  \lean{IsCommunicationEq}
+  \leanok
+  \uses{def:payoff}
+  $\pi$ is a communication equilibrium of $G(d)$ if no player $i$ gains by
+  switching to another mixed strategy $\rho$.
+\end{definition}
+
+\begin{definition}[Communication-equilibrium outcome]
+  \label{def:comm-eq-outcome}
+  \lean{IsCommunicationEqOutcome}
+  \leanok
+  \uses{def:comm-eq}
+  $\mu$ is a communication-equilibrium outcome if some device $d$ and
+  communication equilibrium $\pi$ of $G(d)$ produce it.
+\end{definition}
+
+\begin{definition}[Direct device, truthful play]
+  \label{def:direct}
+  \lean{DirectDevice, truthful, truthfulProfile}
+  \leanok
+  \uses{def:device, def:strategies}
+  A direct device has $M_i = T_i$ and $R_i = A_i$. Truthful play reports the
+  true type and obeys the recommended action.
+\end{definition}
+
+\section{The proof}
+
+\begin{definition}[Canonical device]
+  \label{def:canonical}
+  \lean{canonical}
+  \leanok
+  \uses{def:direct, def:outcome}
+  Given $d$ and $\pi$, the canonical device $d^*$ takes reported types $t$ and
+  recommends actions drawn from $\mu(\cdot \mid t)$.
+\end{definition}
+
+\begin{definition}[Mimicking strategy]
+  \label{def:deviate}
+  \lean{deviate, deviateMixed}
+  \leanok
+  \uses{def:strategies, def:findist-prod}
+  Given a strategy $x$ of player $i$ under $d^*$ and a strategy $y$ under $d$,
+  the mimic plays $y$ as if the type were $x$'s report, then applies $x$'s
+  action rule to $y$'s action.
+\end{definition}
+
+\begin{lemma}[Truthful outcome equivalence]
+  \label{lem:truthful}
+  \lean{canonical_truthful_outcome_equivalence}
+  \leanok
+  \uses{def:canonical}
+  Truthful play under $d^*$ has the same outcome as $\pi$ under $d$.
+\end{lemma}
+\begin{proof}
+  The truthful profile is a point mass, so reports equal $t$; then $d^*$
+  draws from $\mu(\cdot \mid t)$, and obeying is the identity.
+\end{proof}
+
+\begin{lemma}[Deviation outcome equivalence]
+  \label{lem:deviation}
+  \lean{canonical_deviation_outcome_equivalence}
+  \leanok
+  \uses{def:canonical, def:deviate}
+  Deviating to $\rho$ under $d^*$ has the same outcome as playing the mimic
+  of $\rho$ under $d$.
+\end{lemma}
+\begin{proof}
+  Both sides are nested independent draws of $x \sim \rho$ and
+  $y \sim \otimes_j \pi_j$; swap their order, and note that redrawing player
+  $i$'s coordinate from $\pi_i$ does not change the distribution.
+\end{proof}
+
+\begin{theorem}[Revelation Principle, canonical form]
+  \label{thm:revelation-canonical}
+  \lean{revelation_principle_canonical}
+  \leanok
+  \uses{def:comm-eq, def:canonical}
+  If $\pi$ is a communication equilibrium of $G(d)$, then truthful play is a
+  communication equilibrium of $G(d^*)$ with the same outcome.
+\end{theorem}
+\begin{proof}
+  \leanok
+  \uses{lem:truthful, lem:deviation}
+  A deviation's payoff under $d^*$ equals its mimic's payoff under $d$, which
+  is at most the equilibrium payoff, which equals truthful play's payoff.
+\end{proof}
+
+\begin{theorem}[Revelation Principle, existence form]
+  \label{thm:revelation}
+  \lean{revelation_principle}
+  \leanok
+  \uses{def:comm-eq, def:direct}
+  If $\pi$ is a communication equilibrium of $G(d)$, some direct device has
+  truthful play as a communication equilibrium with the same outcome.
+\end{theorem}
+\begin{proof}
+  \leanok
+  \uses{thm:revelation-canonical}
+  Take the canonical device.
+\end{proof}
+
+\begin{theorem}[Revelation Principle]
+  \label{thm:revelation-iff}
+  \lean{revelation_principle_iff}
+  \leanok
+  \uses{def:comm-eq-outcome, def:direct}
+  $\mu$ is a communication-equilibrium outcome if and only if $\mu$ is the
+  outcome of a truthful equilibrium under some direct device.
+\end{theorem}
+\begin{proof}
+  \leanok
+  \uses{thm:revelation}
+  ($\Rightarrow$) by the existence form; ($\Leftarrow$) a direct device is a
+  device.
+\end{proof}

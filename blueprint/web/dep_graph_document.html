@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dependency graph</title>
+  <meta name="generator" content="plasTeX" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles/theme-white.css" />
+  <link rel="stylesheet" href="styles/dep_graph.css" />
+  
+  <script type="text/x-mathjax-config">
+  
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  
+  </script>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">  </script>
+
+
+<link rel="stylesheet" href="styles/extra_styles.css" />
+
+</head>
+
+<body>
+<header>
+  <a class="toc" href="index.html">Home</a>
+  <h1 id="doc_title">Dependencies</h1>
+</header>
+<div class="wrapper">
+<div class="content">
+  <div id="Legend">
+    <span id="legend_title" class="title">Legend
+    <div class="btn">
+       <div class="bar"></div>
+       <div class="bar"></div>
+       <div class="bar"></div>
+    </div></span> 
+    <dl class="legend">
+      
+      <dt>Boxes</dt><dd>definitions</dd>
+      
+      <dt>Ellipses</dt><dd>theorems and lemmas</dd>
+      
+      <dt>Blue border</dt><dd>the <em>statement</em> of this result is ready to be formalized; all prerequisites are done</dd>
+      
+      <dt>Orange border</dt><dd>the <em>statement</em> of this result is not ready to be formalized; the blueprint needs more work</dd>
+      
+      <dt>Blue background</dt><dd>the <em>proof</em> of this result is ready to be formalized; all prerequisites are done</dd>
+      
+      <dt>Green border</dt><dd>the <em>statement</em> of this result is formalized</dd>
+      
+      <dt>Green background</dt><dd>the <em>proof</em> of this result is formalized</dd>
+      
+      <dt>Dark green background</dt><dd>the <em>proof</em> of this result and all its ancestors are formalized</dd>
+      
+      <dt>Dark green border</dt><dd>this is in Mathlib</dd>
+      
+    </dl>
+  </div>
+    <div id="graph"></div>
+<div id="statements">
+
+    
+    <div class="dep-modal-container" id="def:bayes-game_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:bayes-game" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">5</span><span class="definition_thmtitle">Bayesian game</span></div>
+    <div class="thm_thmcontent"><p>    A Bayesian game \(G\) consists of a common prior \(p\) on type profiles and payoffs \(u_i(a, t)\). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:bayes-game">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/BayesGame">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:canonical_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:canonical" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">13</span><span class="definition_thmtitle">Canonical device</span></div>
+    <div class="thm_thmcontent"><p>    Given \(d\) and \(\pi \), the canonical device \(d^*\) takes reported types \(t\) and recommends actions drawn from \(\mu (\cdot \mid t)\). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:canonical">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/canonical">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:comm-eq_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:comm-eq" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">10</span><span class="definition_thmtitle">Communication equilibrium</span></div>
+    <div class="thm_thmcontent"><p>    \(\pi \) is a communication equilibrium of \(G(d)\) if no player \(i\) gains by switching to another mixed strategy \(\rho \). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:comm-eq">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/IsCommunicationEq">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:comm-eq-outcome_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:comm-eq-outcome" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">11</span><span class="definition_thmtitle">Communication-equilibrium outcome</span></div>
+    <div class="thm_thmcontent"><p>    \(\mu \) is a communication-equilibrium outcome if some device \(d\) and communication equilibrium \(\pi \) of \(G(d)\) produce it. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:comm-eq-outcome">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/IsCommunicationEqOutcome">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:deviate_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:deviate" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">14</span><span class="definition_thmtitle">Mimicking strategy</span></div>
+    <div class="thm_thmcontent"><p>    Given a strategy \(x\) of player \(i\) under \(d^*\) and a strategy \(y\) under \(d\), the mimic plays \(y\) as if the type were \(x\)’s report, then applies \(x\)’s action rule to \(y\)’s action. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:deviate">LaTeX</a>
+    
+    
+  <div class="tooltip">
+      <span class="lean_link">Lean</span>
+      <ul class="tooltip_list">
+        
+           <li><a href="/find/#doc/deviate" class="lean_decl">deviate</a></li>
+        
+           <li><a href="/find/#doc/deviateMixed" class="lean_decl">deviateMixed</a></li>
+        
+      </ul>
+  </div>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:device_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:device" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">6</span><span class="definition_thmtitle">Communication device</span></div>
+    <div class="thm_thmcontent"><p>    A device \(d\) maps each message profile \(m\) to a distribution \(q(\cdot \mid m)\) of signal profiles. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:device">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/Device">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:direct_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:direct" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">12</span><span class="definition_thmtitle">Direct device, truthful play</span></div>
+    <div class="thm_thmcontent"><p>    A direct device has \(M_i = T_i\) and \(R_i = A_i\). Truthful play reports the true type and obeys the recommended action. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:direct">LaTeX</a>
+    
+    
+  <div class="tooltip">
+      <span class="lean_link">Lean</span>
+      <ul class="tooltip_list">
+        
+           <li><a href="/find/#doc/DirectDevice" class="lean_decl">DirectDevice</a></li>
+        
+           <li><a href="/find/#doc/truthful" class="lean_decl">truthful</a></li>
+        
+           <li><a href="/find/#doc/truthfulProfile" class="lean_decl">truthfulProfile</a></li>
+        
+      </ul>
+  </div>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:findist_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:findist" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">1</span><span class="definition_thmtitle">Finite distribution</span></div>
+    <div class="thm_thmcontent"><p>   A distribution \(\mu \) on a finite set \(X\) is a weight \(\mu (x) \ge 0\) for each \(x \in X\), with \(\sum _x \mu (x) = 1\). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:findist">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/FinDist">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:findist-E_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:findist-E" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">3</span><span class="definition_thmtitle">Expectation</span></div>
+    <div class="thm_thmcontent"><p>    \(\mathbb {E}_\mu [g] = \sum _x \mu (x)\,  g(x)\). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:findist-E">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/FinDist.E">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:findist-ops_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:findist-ops" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">2</span><span class="definition_thmtitle">Point mass, mixture, pushforward</span></div>
+    <div class="thm_thmcontent"><p>    The point mass \(\delta _a\); the mixture \((\mu \gg \! = f)(b) = \sum _a \mu (a)\,  f(a)(b)\); and the pushforward \(f_*\mu \). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:findist-ops">LaTeX</a>
+    
+    
+  <div class="tooltip">
+      <span class="lean_link">Lean</span>
+      <ul class="tooltip_list">
+        
+           <li><a href="/find/#doc/FinDist.pure" class="lean_decl">FinDist.pure</a></li>
+        
+           <li><a href="/find/#doc/FinDist.bind" class="lean_decl">FinDist.bind</a></li>
+        
+           <li><a href="/find/#doc/FinDist.map" class="lean_decl">FinDist.map</a></li>
+        
+      </ul>
+  </div>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:findist-prod_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:findist-prod" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">4</span><span class="definition_thmtitle">Independent products</span></div>
+    <div class="thm_thmcontent"><p>    The product of a family, \((\otimes _i \mu _i)(s) = \prod _i \mu _i(s_i)\), and of a pair, \((\mu \otimes \nu )(a,b) = \mu (a)\, \nu (b)\). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:findist-prod">LaTeX</a>
+    
+    
+  <div class="tooltip">
+      <span class="lean_link">Lean</span>
+      <ul class="tooltip_list">
+        
+           <li><a href="/find/#doc/FinDist.pi" class="lean_decl">FinDist.pi</a></li>
+        
+           <li><a href="/find/#doc/FinDist.prod" class="lean_decl">FinDist.prod</a></li>
+        
+      </ul>
+  </div>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:outcome_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:outcome" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">8</span><span class="definition_thmtitle">Play and outcome</span></div>
+    <div class="thm_thmcontent"><p>    Given types \(t\), players draw pure strategies independently, send messages, receive signals from \(d\), and act. The outcome \(\mu (\cdot \mid t)\) is the resulting distribution of action profiles. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:outcome">LaTeX</a>
+    
+    
+  <div class="tooltip">
+      <span class="lean_link">Lean</span>
+      <ul class="tooltip_list">
+        
+           <li><a href="/find/#doc/play" class="lean_decl">play</a></li>
+        
+           <li><a href="/find/#doc/outcome" class="lean_decl">outcome</a></li>
+        
+      </ul>
+  </div>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:payoff_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:payoff" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">9</span><span class="definition_thmtitle">Payoff</span></div>
+    <div class="thm_thmcontent"><p>    Player \(i\)’s ex-ante payoff is \(\mathbb {E}_{t \sim p}\,  \mathbb {E}_{a \sim \mu (\cdot \mid t)}[u_i(a, t)]\). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:payoff">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/payoff">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="def:strategies_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="def:strategies" style="display: none">
+    <div class="thm_thmheading">
+      <span class="definition_thmcaption">
+      Definition
+      </span>
+      <span class="definition_thmlabel">7</span><span class="definition_thmtitle">Strategies</span></div>
+    <div class="thm_thmcontent"><p>    A pure strategy of player \(i\) is a report rule \(T_i \to M_i\) and an action rule \(T_i \times M_i \times R_i \to A_i\). A mixed strategy profile assigns each player a distribution over pure strategies. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#def:strategies">LaTeX</a>
+    
+    
+  <div class="tooltip">
+      <span class="lean_link">Lean</span>
+      <ul class="tooltip_list">
+        
+           <li><a href="/find/#doc/ReportRule" class="lean_decl">ReportRule</a></li>
+        
+           <li><a href="/find/#doc/ActionRule" class="lean_decl">ActionRule</a></li>
+        
+           <li><a href="/find/#doc/PureStrat" class="lean_decl">PureStrat</a></li>
+        
+           <li><a href="/find/#doc/MixStrategyProfile" class="lean_decl">MixStrategyProfile</a></li>
+        
+      </ul>
+  </div>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="lem:deviation_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="lem:deviation" style="display: none">
+    <div class="thm_thmheading">
+      <span class="lemma_thmcaption">
+      Lemma
+      </span>
+      <span class="lemma_thmlabel">16</span><span class="lemma_thmtitle">Deviation outcome equivalence</span></div>
+    <div class="thm_thmcontent"><p>    Deviating to \(\rho \) under \(d^*\) has the same outcome as playing the mimic of \(\rho \) under \(d\). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#lem:deviation">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/canonical_deviation_outcome_equivalence">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="lem:truthful_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="lem:truthful" style="display: none">
+    <div class="thm_thmheading">
+      <span class="lemma_thmcaption">
+      Lemma
+      </span>
+      <span class="lemma_thmlabel">15</span><span class="lemma_thmtitle">Truthful outcome equivalence</span></div>
+    <div class="thm_thmcontent"><p>    Truthful play under \(d^*\) has the same outcome as \(\pi \) under \(d\). </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#lem:truthful">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/canonical_truthful_outcome_equivalence">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:revelation_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:revelation" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">18</span><span class="theorem_thmtitle">Revelation Principle, existence form</span></div>
+    <div class="thm_thmcontent"><p>    If \(\pi \) is a communication equilibrium of \(G(d)\), some direct device has truthful play as a communication equilibrium with the same outcome. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#thm:revelation">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/revelation_principle">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:revelation-canonical_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:revelation-canonical" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">17</span><span class="theorem_thmtitle">Revelation Principle, canonical form</span></div>
+    <div class="thm_thmcontent"><p>    If \(\pi \) is a communication equilibrium of \(G(d)\), then truthful play is a communication equilibrium of \(G(d^*)\) with the same outcome. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#thm:revelation-canonical">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/revelation_principle_canonical">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+
+
+    
+    <div class="dep-modal-container" id="thm:revelation-iff_modal">
+      <div class="dep-modal-content">
+          <button class="dep-closebtn">
+<svg  class="icon icon-cross "><use xlink:href="symbol-defs.svg#icon-cross"></use></svg>
+</button>
+        
+  <div class="thm" id="thm:revelation-iff" style="display: none">
+    <div class="thm_thmheading">
+      <span class="theorem_thmcaption">
+      Theorem
+      </span>
+      <span class="theorem_thmlabel">19</span><span class="theorem_thmtitle">Revelation Principle</span></div>
+    <div class="thm_thmcontent"><p>    \(\mu \) is a communication-equilibrium outcome if and only if \(\mu \) is the outcome of a truthful equilibrium under some direct device. </p>
+</div>
+
+    <a class="latex_link" href="sect0001.html#thm:revelation-iff">LaTeX</a>
+    
+    
+  <a class="lean_link lean_decl" href="/find/#doc/revelation_principle_iff">Lean</a>
+    
+    
+  
+    
+  </div>
+    
+      </div>
+    </div>
+</div>
+</div> <!-- content -->
+</div> <!-- wrapper -->
+<script src="js/jquery.min.js" type="text/javascript"></script>
+
+<script src="js/d3.min.js"></script>
+<script src="js/hpcc.min.js"></script>
+<script src="js/d3-graphviz.js"></script>
+
+<script type="text/javascript">
+const graphContainer = d3.select("#graph");
+const width = graphContainer.node().clientWidth;
+const height = graphContainer.node().clientHeight;
+
+
+graphContainer.graphviz({useWorker: true})
+    .width(width)
+    .height(height)
+    .fit(true)
+    .renderDot(`strict digraph "" {	graph [bgcolor=transparent];	node [label="\N",		penwidth=1.8	];	edge [arrowhead=vee];	"def:findist-E"	[color=green,		fillcolor="#B0ECA3",		label="findist-E",		shape=box,		style=filled];	"def:payoff"	[color=green,		fillcolor="#B0ECA3",		label=payoff,		shape=box,		style=filled];	"def:findist-E" -> "def:payoff"	[style=dashed];	"def:comm-eq"	[color=green,		fillcolor="#B0ECA3",		label="comm-eq",		shape=box,		style=filled];	"def:payoff" -> "def:comm-eq"	[style=dashed];	"thm:revelation-canonical"	[color=green,		fillcolor="#9CEC8B",		label="revelation-canonical",		shape=ellipse,		style=filled];	"def:comm-eq" -> "thm:revelation-canonical"	[style=dashed];	"def:comm-eq-outcome"	[color=green,		fillcolor="#B0ECA3",		label="comm-eq-outcome",		shape=box,		style=filled];	"def:comm-eq" -> "def:comm-eq-outcome"	[style=dashed];	"thm:revelation"	[color=green,		fillcolor="#9CEC8B",		label=revelation,		shape=ellipse,		style=filled];	"thm:revelation-canonical" -> "thm:revelation";	"thm:revelation-iff"	[color=green,		fillcolor="#9CEC8B",		label="revelation-iff",		shape=ellipse,		style=filled];	"thm:revelation" -> "thm:revelation-iff";	"def:findist"	[color=green,		fillcolor="#B0ECA3",		label=findist,		shape=box,		style=filled];	"def:findist" -> "def:findist-E"	[style=dashed];	"def:findist-prod"	[color=green,		fillcolor="#B0ECA3",		label="findist-prod",		shape=box,		style=filled];	"def:findist" -> "def:findist-prod"	[style=dashed];	"def:findist-ops"	[color=green,		fillcolor="#B0ECA3",		label="findist-ops",		shape=box,		style=filled];	"def:findist" -> "def:findist-ops"	[style=dashed];	"def:strategies"	[color=green,		fillcolor="#B0ECA3",		label=strategies,		shape=box,		style=filled];	"def:findist" -> "def:strategies"	[style=dashed];	"def:bayes-game"	[color=green,		fillcolor="#B0ECA3",		label="bayes-game",		shape=box,		style=filled];	"def:findist" -> "def:bayes-game"	[style=dashed];	"def:device"	[color=green,		fillcolor="#B0ECA3",		label=device,		shape=box,		style=filled];	"def:findist" -> "def:device"	[style=dashed];	"def:deviate"	[color=green,		fillcolor="#B0ECA3",		label=deviate,		shape=box,		style=filled];	"def:findist-prod" -> "def:deviate"	[style=dashed];	"def:outcome"	[color=green,		fillcolor="#B0ECA3",		label=outcome,		shape=box,		style=filled];	"def:findist-prod" -> "def:outcome"	[style=dashed];	"def:findist-ops" -> "def:outcome"	[style=dashed];	"def:strategies" -> "def:deviate"	[style=dashed];	"def:strategies" -> "def:outcome"	[style=dashed];	"def:direct"	[color=green,		fillcolor="#B0ECA3",		label=direct,		shape=box,		style=filled];	"def:strategies" -> "def:direct"	[style=dashed];	"def:bayes-game" -> "def:payoff"	[style=dashed];	"def:device" -> "def:outcome"	[style=dashed];	"def:device" -> "def:direct"	[style=dashed];	"lem:deviation"	[color=green,		fillcolor="#A3D6FF",		label=deviation,		shape=ellipse,		style=filled];	"def:deviate" -> "lem:deviation"	[style=dashed];	"def:outcome" -> "def:payoff"	[style=dashed];	"def:canonical"	[color=green,		fillcolor="#B0ECA3",		label=canonical,		shape=box,		style=filled];	"def:outcome" -> "def:canonical"	[style=dashed];	"def:direct" -> "def:canonical"	[style=dashed];	"lem:deviation" -> "thm:revelation-canonical";	"def:canonical" -> "lem:deviation"	[style=dashed];	"lem:truthful"	[color=green,		fillcolor="#A3D6FF",		label=truthful,		shape=ellipse,		style=filled];	"def:canonical" -> "lem:truthful"	[style=dashed];	"def:comm-eq-outcome" -> "thm:revelation-iff"	[style=dashed];	"lem:truthful" -> "thm:revelation-canonical";}`)
+    .on("end", interactive);
+
+latexLabelEscaper = function(label) {
+  return label.replace(/\./g, '\\.').replace(/:/g, '\\:')
+}
+
+clickNode = function() {
+  $("#statements div").hide()
+  var node_id = $('text', this).text();
+  $('.thm').hide();
+  $('#'+latexLabelEscaper(node_id)).show().children().show();
+}
+function interactive() {
+    $("span#legend_title").on("click", function () {
+           $(this).siblings('dl').toggle();
+        })
+
+    d3.selectAll('.node')
+        .attr('pointer-events', 'fill')
+        .on('click', function () {
+           var title = d3.select(this).selectAll('title').text().trim();
+           $('#statements > div').hide()
+           $('.thm').hide();
+           $('#'+latexLabelEscaper(title)+'_modal').show().children().show().children().show();
+           $('#statements').show()
+        });
+
+    d3.selectAll('.dep-closebtn').on('click', function() {
+        var modal =
+            d3.select(this).node().parentNode.parentNode.parentNode ;
+        d3.select(modal).style('display', 'none');
+    });
+}
+
+</script>
+
+</body>
+</html>

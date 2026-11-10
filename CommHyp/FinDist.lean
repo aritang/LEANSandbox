@@ -1,4 +1,8 @@
-import Mathlib
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+import Mathlib.Data.Fintype.BigOperators
+import Mathlib.Basic.Real.Basic
+import Mathlib.Logic.Equiv.Prod
+import Mathlib.Tactic.NormNum.Basic
 
 /-!
 # Finite probability distributions
@@ -203,7 +207,12 @@ lemma map_bind
     (μ : FinDist α)
     (g : α → FinDist β) :
     f <$> (μ >>= g) = μ >>= (fun (a : α) => f <$> g a) := by
-  sorry
+  -- Step 1: unfold the outer `map` into a `bind` with `pure ∘ f`.
+  rw [FinDist.map]
+  -- Step 2: reassociate the two binds.
+  rw [FinDist.bind_assoc]
+  -- Step 3: both sides now agree by unfolding `map` (definitional equality).
+  rfl
 
 /-- lemma `map_map`:
 - f : α → β
@@ -217,7 +226,12 @@ lemma map_map
     (g : β → γ)
     (μ : FinDist α) :
     g <$> (f <$> μ) = (fun (a : α) => g (f a)) <$> μ := by
-  sorry
+  -- Step 1: unfold only the outer `map g` into a `bind` with `pure ∘ g`.
+  rw [FinDist.map]
+  -- Step 2: the goal is now `(f <$> μ) >>= (fun b ↦ pure (g b)) = ...`; apply `bind_map`.
+  rw [FinDist.bind_map]
+  -- Step 3: both sides are `μ >>= (fun a ↦ pure (g (f a)))` after unfolding `∘` and `map`.
+  rfl
 
 /-- lemma `prod_bind`:
 - μ : FinDist α
@@ -232,15 +246,99 @@ lemma prod_bind
     (h : α × β → FinDist γ) :
     (μ ⊗ ν) >>= h
       = μ >>= (fun (a : α) => ν >>= (fun (b : β) => h (a, b))) := by
-  sorry
+  -- Step 1: compare the weight of each point `c`.
+  ext c
+  -- Step 2: unfold every `bind` and `prod` (on both sides) into sums.
+  simp only [FinDist.bind, FinDist.prod]
+  -- Step 3: split the sum over pairs `p : α × β` into a double sum over `a`, then `b`.
+  rw [Fintype.sum_prod_type]
+  -- Step 4: push `μ.w a` inside the inner sum on the right, and regroup the products.
+  simp only [Finset.mul_sum, mul_assoc]
+
+
+/-!
+### Bookkeeping for `pi_update_bind`
+
+Notation used below, for a player `i`:
+- `r : ∀ j : {j // j ≠ i}, X j` is the actions of everyone except `i` ("`s_{-i}`").
+- `(Equiv.piSplitAt i X).symm (x, r)` is the full profile with `x` for player `i` and `r` for everyone else ("`(x, s_{-i})`").
+-/
+
+/-- `_sum_pi_split` (bookkeeping): a sum over profiles `s` is a double sum over `x = s_i` and `r = s_{-i}`.
+
+⊢ ∑ s, f s = ∑ x, ∑ r, f (x, r) -/
+lemma _sum_pi_split
+    {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)]
+    (i : ι) (f : (∀ j : ι, X j) → ℝ) :
+    ∑ s : (∀ j : ι, X j), f s
+      = ∑ x : X i, ∑ r : (∀ j : {j // j ≠ i}, X j),
+          f ((Equiv.piSplitAt i X).symm (x, r)) := by
+  rw [← (Equiv.piSplitAt i X).symm.sum_comp, Fintype.sum_prod_type]
+
+/-- `_pi_weight_split` (bookkeeping): the weight of `(x, r)` under `⨂ μ` is `μ_i(x) * μ_{-i}(r)`.
+
+⊢ (⨂ μ)(x, r) = μ_i(x) * ∏_{j ≠ i} μ_j(r_j) -/
+lemma _pi_weight_split
+    {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)]
+    (μ : ∀ i : ι, FinDist (X i)) (i : ι) (x : X i) (r : ∀ j : {j // j ≠ i}, X j) :
+    (⨂ μ).w ((Equiv.piSplitAt i X).symm (x, r))
+      = (μ i).w x * ∏ j : {j // j ≠ i}, (μ j).w (r j) := by
+  simp only [FinDist.pi]
+  rw [Fintype.prod_eq_mul_prod_subtype_ne _ i]
+  congr 1
+  · simp
+  · exact Finset.prod_congr rfl (fun j _ => by simp [j.2])
+
+/-- `_pi_update_weight_split` (bookkeeping): the weight of `(x, r)` under `⨂ (ν, μ_{-i})` is `ν(x) * μ_{-i}(r)`.
+
+⊢ (⨂ (Function.update μ i ν))(x, r) = ν(x) * ∏_{j ≠ i} μ_j(r_j) -/
+lemma _pi_update_weight_split
+    {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)]
+    (μ : ∀ i : ι, FinDist (X i)) (i : ι) (ν : FinDist (X i))
+    (x : X i) (r : ∀ j : {j // j ≠ i}, X j) :
+    (⨂ (Function.update μ i ν)).w ((Equiv.piSplitAt i X).symm (x, r))
+      = ν.w x * ∏ j : {j // j ≠ i}, (μ j).w (r j) := by
+  rw [_pi_weight_split]
+  congr 1
+  · simp
+  · exact Finset.prod_congr rfl (fun j _ => by rw [Function.update_of_ne j.2])
+
+/-- `_update_split` (bookkeeping): putting `x` in slot `i` of `(y, r)` gives `(x, r)`.
+
+⊢ Function.update (y, r) i x = (x, r) -/
+lemma _update_split
+    {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)]
+    (i : ι) (x y : X i) (r : ∀ j : {j // j ≠ i}, X j) :
+    Function.update ((Equiv.piSplitAt i X).symm (y, r)) i x
+      = (Equiv.piSplitAt i X).symm (x, r) := by
+  funext j
+  by_cases h : j = i
+  · subst h; simp
+  · simp [h]
+
+/-- `_sum_out` (algebra): summing out a variable drawn from a distribution `μ`.
+
+⊢ ∑ a, ∑ b, μ(a) * g(b) = ∑ b, g(b) -/
+lemma _sum_out (μ : FinDist α) (g : β → ℝ) :
+    ∑ a : α, ∑ b : β, μ.w a * g b = ∑ b : β, g b := by
+  simp only [← Finset.mul_sum]
+  rw [← Finset.sum_mul, μ.sum_one, one_mul]
 
 /-- lemma `pi_update_bind`:
-- μ : ∀ j, FinDist (X j)
-- i : ι
-- ν : FinDist (X i)
-- F : (∀ j, X j) → FinDist γ
+- μ : ∀ j, FinDist (X j) -- A mixed strategy profile
+- i : ι -- fix agent i
+- ν : FinDist (X i) -- a mixed strategy (deviation) of player i
+- F : (∀ j, X j) → FinDist γ -- takes a pure action profile and return a random outcome
 
 ⊢ (⨂ (Function.update μ i ν)) >>= F = ν >>= (fun x ↦ (⨂ μ) >>= (fun s ↦ F (Function.update s i x)))
+
+Left side: everyone draws independently from $(\nu, \mu_{-i})$, then you apply $F$ to the result.
+
+Right side:
+
+Draw $x \sim \nu$.
+Draw a full profile $s \sim \bigotimes_j \mu_j$, including a draw $s_i \sim \mu_i$ for player $i$.
+Throw away $s_i$, put $x$ in its place, and apply $F(x, s_{-i})$.
 -/
 lemma pi_update_bind
     {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)]
@@ -252,6 +350,17 @@ lemma pi_update_bind
       = ν >>= (fun (x : X i) =>
           (⨂ μ) >>= (fun (s : ∀ j : ι, X j) =>
             F (Function.update s i x))) := by
-  sorry
+  -- Fix an outcome `c`; write `G s := F(s)(c)`.
+  ext c
+  simp only [FinDist.bind]
+  -- Split every `s` into `(s_i, s_{-i})`.
+  -- L: the weight of `s` splits to `ν(s_i) μ_{-i}(s_{-i})`.
+  simp only [_sum_pi_split i, _pi_update_weight_split]
+  -- R: the weight of `s` splits to `μ_i(s_i) μ_{-i}(s_{-i})`, and `update (s_i, s_{-i}) i x = (x, s_{-i})`.
+  simp only [_pi_weight_split, _update_split]
+  -- R: sum out `s_i`.
+  simp only [mul_assoc, _sum_out]
+  -- R: move `ν(x)` inside; now L = R.
+  simp only [Finset.mul_sum]
 
 end FinDist

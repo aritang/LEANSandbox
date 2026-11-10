@@ -35,7 +35,11 @@ def canonical (d : Device M R) (π : MixStrategyProfile T A M R) : DirectDevice 
   Device.mk (outcome d π)
 
 /-- lemma `canonical_truthful_outcome_equivalence`: truthful play with `d*` has the same outcome as `π` with `d`. -/
-lemma canonical_truthful_outcome_equivalence (d : Device M R) (π : MixStrategyProfile T A M R) (t : ∀ j : ι, T j) : outcome (canonical d π) truthfulProfile t = outcome d π t := by
+lemma canonical_truthful_outcome_equivalence
+    (d : Device M R)
+    (π : MixStrategyProfile T A M R)
+    (t : ∀ j : ι, T j) :
+    outcome (canonical d π) truthfulProfile t = outcome d π t := by
   -- Step 1: unfold the definitions.
   unfold outcome truthfulProfile
   -- Step 2: everyone plays `truthful` for sure (`pi_pure`).
@@ -76,7 +80,11 @@ def deviate {i : ι} (x : PureStrat T A T A i) (y : PureStrat T A M R i) : PureS
 σ is Mixed Strategy of i (PureStrat T A M R i)
 returns the distribution of y' ~ deviate x y, with x ~ ρ, y ~ σ
 -/
-def deviateMixed {i : ι} (ρ : FinDist (PureStrat T A T A i)) (σ : FinDist (PureStrat T A M R i)) : FinDist (PureStrat T A M R i) :=
+def deviateMixed
+    {i : ι}
+    (ρ : FinDist (PureStrat T A T A i))
+    (σ : FinDist (PureStrat T A M R i)) :
+    FinDist (PureStrat T A M R i) :=
   (σ.prod ρ).map (fun p => deviate p.2 p.1)
 
 /-- lemma `canonical_deviation_outcome_equivalence`:
@@ -89,13 +97,26 @@ t : (j : ι) → T j -- everyone's type profile
 then: outcome (canonical d π) (Function.update truthfulProfile i ρ) t =
   outcome d (Function.update π i (deviateMixed ρ (π i))) t
 -/
-lemma canonical_deviation_outcome_equivalence (d : Device M R) (π : MixStrategyProfile T A M R) (i : ι) (ρ : FinDist (PureStrat T A T A i)) (t : ∀ j : ι, T j) : outcome (canonical d π) (Function.update truthfulProfile i ρ) t = outcome d (Function.update π i (deviateMixed ρ (π i))) t := by
+lemma canonical_deviation_outcome_equivalence
+    (d : Device M R)
+    (π : MixStrategyProfile T A M R)
+    (i : ι)
+    (ρ : FinDist (PureStrat T A T A i))
+    (t : ∀ j : ι, T j) :
+    outcome (canonical d π) (Function.update truthfulProfile i ρ) t
+      = outcome d (Function.update π i (deviateMixed ρ (π i))) t := by
   simp [canonical, ]
   sorry
 
 
 /-- theorem `revelation_principle_canonical`: if `π` is a communication equilibrium with `d`, truthful play is one with `d*`, with the same outcome. -/
-theorem revelation_principle_canonical (G : BayesGame T A) (d : Device M R) (π : MixStrategyProfile T A M R) (h : IsCommunicationEq G d π) : IsCommunicationEq G (canonical d π) truthfulProfile ∧ ∀ t : (∀ j : ι, T j), outcome (canonical d π) truthfulProfile t = outcome d π t := by
+theorem revelation_principle_canonical
+    (G : BayesGame T A)
+    (d : Device M R)
+    (π : MixStrategyProfile T A M R)
+    (h : IsCommunicationEq G d π) :
+    IsCommunicationEq G (canonical d π) truthfulProfile
+      ∧ ∀ t : (∀ j : ι, T j), outcome (canonical d π) truthfulProfile t = outcome d π t := by
   refine And.intro (fun (i : ι) (ρ : FinDist (PureStrat T A T A i)) => ?_) (canonical_truthful_outcome_equivalence d π)
   -- deviating to `ρ` with `d*` pays the same as deviating to `deviateMixed ρ (π i)` with `d`
   have hdev : payoff G (canonical d π) (Function.update truthfulProfile i ρ) i = payoff G d (Function.update π i (deviateMixed ρ (π i))) i := by
@@ -111,13 +132,25 @@ theorem revelation_principle_canonical (G : BayesGame T A) (d : Device M R) (π 
   exact h i _ -/
 
 /-- theorem `revelation_principle`: if `π` is a communication equilibrium with `d`, some direct device has truthful play as an equilibrium with the same outcome. -/
-theorem revelation_principle (G : BayesGame T A) (d : Device M R) (π : MixStrategyProfile T A M R) (h : IsCommunicationEq G d π) : ∃ (d' : DirectDevice T A), IsCommunicationEq G d' truthfulProfile ∧ ∀ (t : ∀ j : ι, T j), outcome d' truthfulProfile t = outcome d π t :=
+theorem revelation_principle
+    (G : BayesGame T A)
+    (d : Device M R)
+    (π : MixStrategyProfile T A M R)
+    (h : IsCommunicationEq G d π) :
+    ∃ (d' : DirectDevice T A), IsCommunicationEq G d' truthfulProfile
+      ∧ ∀ (t : ∀ j : ι, T j), outcome d' truthfulProfile t = outcome d π t :=
   Exists.intro (canonical d π) (revelation_principle_canonical G d π h)
 /- Short form:
   ⟨canonical d π, revelation_principle_canonical G d π h⟩ -/
 
 /-- theorem `revelation_principle_iff`: `μ` is a communication-equilibrium outcome iff it is the outcome of a truthful equilibrium with some direct device. -/
-theorem revelation_principle_iff (G : BayesGame T A) (μ : (∀ j : ι, T j) → FinDist (∀ j : ι, A j)) : IsCommunicationEqOutcome G μ ↔ ∃ (d' : DirectDevice T A), IsCommunicationEq G d' truthfulProfile ∧ ∀ (t : ∀ j : ι, T j), outcome d' truthfulProfile t = μ t := by
+theorem revelation_principle_iff
+    (G : BayesGame T A)
+    (μ : (∀ j : ι, T j) → FinDist (∀ j : ι, A j)) :
+    IsCommunicationEqOutcome G μ
+      ↔ ∃ (d' : DirectDevice T A),
+          IsCommunicationEq G d' truthfulProfile
+          ∧ ∀ (t : ∀ j : ι, T j), outcome d' truthfulProfile t = μ t := by
   apply Iff.intro
   · -- "only if": unpack the device and equilibrium, then apply `revelation_principle`
     intro hOut

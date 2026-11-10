@@ -48,23 +48,32 @@ def bind (μ : FinDist α) (f : α → FinDist β) : FinDist β where
     simp only [h]
     exact μ.sum_one
 
-/-- `f♯ μ` is `bind μ f`: draw `a` from `μ`, then draw from `f a`. -/
-notation:max f:max "♯" μ:max => FinDist.bind μ f
+/-- `μ >>= f`, for `μ : FinDist α` and `f : α → FinDist β`, is `bind μ f : FinDist β`. -/
+notation:55 μ:55 " >>= " f:56 => FinDist.bind μ f
+
+/-- `g ⊚ f`, for `f : α → FinDist β` and `g : β → FinDist γ`, is the function `α → FinDist γ` that sends `a` to `f a >>= g`. -/
+notation:60 g:61 " ⊚ " f:61 => fun a => FinDist.bind (f a) g
 
 /-- `map f μ`, for `f : α → β` and `μ : FinDist α`, returns the distribution of `f a` when `a` is drawn from `μ`. -/
 def map (f : α → β) (μ : FinDist α) : FinDist β :=
   FinDist.bind μ (fun (a : α) => FinDist.pure (f a))
 
-/-- `f ₊ μ` is `map f μ`: the distribution of `f a` when `a` is drawn from `μ`. -/
-notation:max f:max " ₊ " μ:max => FinDist.map f μ
+/-- `f <$> μ`, for `f : α → β` and `μ : FinDist α`, is `map f μ : FinDist β`. -/
+notation:100 f:101 " <$> " μ:100 => FinDist.map f μ
 
 
 /-- `E μ g` returns the expected value of `g : α → ℝ` under `μ`. -/
 def E (μ : FinDist α) (g : α → ℝ) : ℝ :=
   ∑ a : α, μ.w a * g a
 
+/-- `𝔼[g ; μ]`, for `g : α → ℝ` and `μ : FinDist α`, is `E μ g : ℝ`. -/
+notation "𝔼[" g " ; " μ "]" => FinDist.E μ g
+
 /-- `pi μ` returns the independent product of the distributions `μ i`, a distribution on profiles `∀ i, X i`. -/
-def pi {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)] (μ : ∀ i : ι, FinDist (X i)) : FinDist (∀ i : ι, X i) where
+def pi
+    {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)]
+    (μ : ∀ i : ι, FinDist (X i)) :
+    FinDist (∀ i : ι, X i) where
   w := fun (s : ∀ i : ι, X i) => ∏ i : ι, (μ i).w (s i)
   nonneg := fun (s : ∀ i : ι, X i) => by
     have h : ∀ i : ι, 0 ≤ (μ i).w (s i) := fun (i : ι) => (μ i).nonneg (s i)
@@ -75,6 +84,9 @@ def pi {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)] (�
     have h : ∀ i : ι, ∑ x : X i, (μ i).w x = 1 := fun (i : ι) => (μ i).sum_one
     simp only [h]
     exact Finset.prod_const_one
+
+/-- `⨂ μ`, for `μ : ∀ i, FinDist (X i)`, is `pi μ : FinDist (∀ i, X i)`. -/
+notation "⨂ " μ:max => FinDist.pi μ
 
 /-- `prod μ ν` returns the independent product of `μ` and `ν`, a distribution on pairs `α × β`. -/
 def prod (μ : FinDist α) (ν : FinDist β) : FinDist (α × β) where
@@ -87,6 +99,11 @@ def prod (μ : FinDist α) (ν : FinDist β) : FinDist (α × β) where
       rw [← Finset.mul_sum, ν.sum_one, mul_one]
     simp only [h]
     exact μ.sum_one
+
+/-- `μ ⊗ ν`, for `μ : FinDist α` and `ν : FinDist β`, is `prod μ ν : FinDist (α × β)`. -/
+notation:70 μ:70 " ⊗ " ν:71 => FinDist.prod μ ν
+
+
 
 /-!
 ## Monad laws
@@ -103,16 +120,31 @@ f : α → FinDist β;
 g : β → FinDist γ;
 
 Proves:
-(μ.bind f).bind g = μ.bind (fun a ↦ (f a).bind g)
+(μ >>= f) >>= g = μ >>= (fun a ↦ f a >>= g)
 -/
-lemma bind_assoc (μ : FinDist α) (f : α → FinDist β) (g : β → FinDist γ) : FinDist.bind (FinDist.bind μ f) g = FinDist.bind μ (fun (a : α) => FinDist.bind (f a) g) := by
+lemma bind_assoc
+    (μ : FinDist α)
+    (f : α → FinDist β)
+    (g : β → FinDist γ) :
+    (μ >>= f) >>= g = μ >>= (g ⊚ f) := by
   ext c
   simp only [FinDist.bind, Finset.sum_mul, Finset.mul_sum]
   rw [Finset.sum_comm]
   simp only [mul_assoc]
 
-/-- lemma `bind_comm`: drawing from two independent distributions in either order gives the same result. -/
-lemma bind_comm (μ : FinDist α) (ν : FinDist β) (h : α → β → FinDist γ) : FinDist.bind μ (fun (a : α) => FinDist.bind ν (fun (b : β) => h a b)) = FinDist.bind ν (fun (b : β) => FinDist.bind μ (fun (a : α) => h a b)) := by
+/-- lemma `bind_comm`:
+- μ : FinDist α
+- ν : FinDist β
+- h : α → β → FinDist γ
+
+⊢ μ >>= (fun a ↦ ν >>= (fun b ↦ h a b)) = ν >>= (fun b ↦ μ >>= (fun a ↦ h a b))
+-/
+lemma bind_comm
+    (μ : FinDist α)
+    (ν : FinDist β)
+    (h : α → β → FinDist γ) :
+    μ >>= (fun (a : α) => ν >>= (fun (b : β) => h a b))
+      = ν >>= (fun (b : β) => μ >>= (fun (a : α) => h a b)) := by
   -- Step 1: compare the weight of each point `c`.
   ext c
   -- Step 2: unfold `bind` into sums and move the outer weight inside the inner sum.
@@ -122,19 +154,22 @@ lemma bind_comm (μ : FinDist α) (ν : FinDist β) (h : α → β → FinDist �
   -- Step 4: reorder the products so the two sides match.
   simp only [mul_left_comm]
 
-/-- lemma `pure_bind`: for a point `a : α` and `f : α → FinDist β`, `bind (pure a) f = f a`. -/
-lemma pure_bind (a : α) (f : α → FinDist β) : FinDist.bind (FinDist.pure a) f = f a := by
+/-- lemma `pure_bind`: for a point `a : α` and `f : α → FinDist β`, `pure a >>= f = f a`. -/
+lemma pure_bind (a : α) (f : α → FinDist β) : FinDist.pure a >>= f = f a := by
   -- Two distributions are equal if they give every point the same weight.
   ext b
   simp [FinDist.bind, FinDist.pure]
 
 /-- lemma `map_id'`: mapping `μ` by the identity function gives `μ`. -/
-lemma map_id' (μ : FinDist α) : FinDist.map (fun (a : α) => a) μ = μ := by
+lemma map_id' (μ : FinDist α) : (fun (a : α) => a) <$> μ = μ := by
   ext b
   simp [FinDist.map, FinDist.bind, FinDist.pure]
 
 /-- lemma `pi_pure`: the product of the point distributions at `x i` is the point distribution at `x`. -/
-lemma pi_pure {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)] (x : ∀ i : ι, X i) : FinDist.pi (fun (i : ι) => FinDist.pure (x i)) = FinDist.pure x := by
+lemma pi_pure
+    {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)]
+    (x : ∀ i : ι, X i) :
+    FinDist.pi (fun (i : ι) => FinDist.pure (x i)) = FinDist.pure x := by
   ext b
   simp [FinDist.pi, FinDist.pure]
   rw [Finset.prod_ite_zero]
@@ -145,25 +180,78 @@ lemma pi_pure {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X
 - μ : FinDist α
 - g : β → FinDist γ
 
-⊢ (map f μ).bind g = μ.bind fun a ↦ g (f a)
+⊢ (f <$> μ) >>= g = μ >>= (g ∘ f)
 -/
-lemma bind_map (f : α → β) (μ : FinDist α) (g : β → FinDist γ) : FinDist.bind (FinDist.map f μ) g = FinDist.bind μ (g ∘ f) := by
+lemma bind_map
+    (f : α → β)
+    (μ : FinDist α)
+    (g : β → FinDist γ) :
+    (f <$> μ) >>= g = μ >>= (g ∘ f) := by
+  rw [FinDist.map, FinDist.bind_assoc]
+  simp only [FinDist.pure_bind]
+  rfl
+
+/-- lemma `map_bind`:
+- f : β → γ
+- μ : FinDist α
+- g : α → FinDist β
+
+⊢ f <$> (μ >>= g) = μ >>= (fun a ↦ f <$> g a)
+-/
+lemma map_bind
+    (f : β → γ)
+    (μ : FinDist α)
+    (g : α → FinDist β) :
+    f <$> (μ >>= g) = μ >>= (fun (a : α) => f <$> g a) := by
   sorry
 
-/-- lemma `map_bind`: mapping the result of a bind is the same as mapping inside each branch of the bind. -/
-lemma map_bind (f : β → γ) (μ : FinDist α) (g : α → FinDist β) : FinDist.map f (FinDist.bind μ g) = FinDist.bind μ (fun (a : α) => FinDist.map f (g a)) := by
+/-- lemma `map_map`:
+- f : α → β
+- g : β → γ
+- μ : FinDist α
+
+⊢ g <$> (f <$> μ) = (fun a ↦ g (f a)) <$> μ
+-/
+lemma map_map
+    (f : α → β)
+    (g : β → γ)
+    (μ : FinDist α) :
+    g <$> (f <$> μ) = (fun (a : α) => g (f a)) <$> μ := by
   sorry
 
-/-- lemma `map_map`: mapping twice is the same as mapping once by the composed function. -/
-lemma map_map (f : α → β) (g : β → γ) (μ : FinDist α) : FinDist.map g (FinDist.map f μ) = FinDist.map (fun (a : α) => g (f a)) μ := by
+/-- lemma `prod_bind`:
+- μ : FinDist α
+- ν : FinDist β
+- h : α × β → FinDist γ
+
+⊢ (μ ⊗ ν) >>= h = μ >>= (fun a ↦ ν >>= (fun b ↦ h (a, b)))
+-/
+lemma prod_bind
+    (μ : FinDist α)
+    (ν : FinDist β)
+    (h : α × β → FinDist γ) :
+    (μ ⊗ ν) >>= h
+      = μ >>= (fun (a : α) => ν >>= (fun (b : β) => h (a, b))) := by
   sorry
 
-/-- lemma `prod_bind`: drawing a pair from an independent product is the same as drawing the first coordinate and then the second. -/
-lemma prod_bind (μ : FinDist α) (ν : FinDist β) (h : α × β → FinDist γ) : FinDist.bind (FinDist.prod μ ν) h = FinDist.bind μ (fun (a : α) => FinDist.bind ν (fun (b : β) => h (a, b))) := by
-  sorry
+/-- lemma `pi_update_bind`:
+- μ : ∀ j, FinDist (X j)
+- i : ι
+- ν : FinDist (X i)
+- F : (∀ j, X j) → FinDist γ
 
-/-- lemma `pi_update_bind`: drawing a profile whose `i`-th coordinate comes from `ν` is the same as drawing `x` from `ν`, drawing a profile from the original product, and replacing its `i`-th coordinate by `x`. -/
-lemma pi_update_bind {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)] (μ : ∀ i : ι, FinDist (X i)) (i : ι) (ν : FinDist (X i)) (F : (∀ j : ι, X j) → FinDist γ) : FinDist.bind (FinDist.pi (Function.update μ i ν)) F = FinDist.bind ν (fun (x : X i) => FinDist.bind (FinDist.pi μ) (fun (s : ∀ j : ι, X j) => F (Function.update s i x))) := by
+⊢ (⨂ (Function.update μ i ν)) >>= F = ν >>= (fun x ↦ (⨂ μ) >>= (fun s ↦ F (Function.update s i x)))
+-/
+lemma pi_update_bind
+    {ι : Type} [Fintype ι] {X : ι → Type} [∀ i : ι, Fintype (X i)]
+    (μ : ∀ i : ι, FinDist (X i))
+    (i : ι)
+    (ν : FinDist (X i))
+    (F : (∀ j : ι, X j) → FinDist γ) :
+    (⨂ (Function.update μ i ν)) >>= F
+      = ν >>= (fun (x : X i) =>
+          (⨂ μ) >>= (fun (s : ∀ j : ι, X j) =>
+            F (Function.update s i x))) := by
   sorry
 
 end FinDist

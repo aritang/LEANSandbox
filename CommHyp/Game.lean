@@ -38,7 +38,9 @@ structure PureStrat (T A M R : ι → Type) (i : ι) : Type where
   act : ActionRule T A M R i
 
 /-- `PureStrat._equivProd i`: a pure strategy is a pair (report rule, action rule). -/
-private def PureStrat._equivProd (i : ι) : PureStrat T A M R i ≃ ReportRule T M i × ActionRule T A M R i where
+private def PureStrat._equivProd
+    (i : ι) :
+    PureStrat T A M R i ≃ ReportRule T M i × ActionRule T A M R i where
   toFun := fun (s : PureStrat T A M R i) => (s.report, s.act)
   invFun := fun (p : ReportRule T M i × ActionRule T A M R i) => PureStrat.mk p.1 p.2
   left_inv := fun (_ : PureStrat T A M R i) => rfl
@@ -49,11 +51,19 @@ instance (i : ι) : Fintype (PureStrat T A M R i) :=
   Fintype.ofEquiv (ReportRule T M i × ActionRule T A M R i) (PureStrat._equivProd i).symm
 
 /-- `MixStrategyProfile T A M R` is a mixed strategy profile: `π i` is player `i`'s distribution over pure strategies. -/
-abbrev MixStrategyProfile (T A M R : ι → Type) [∀ i : ι, Fintype (T i)] [∀ i : ι, Fintype (A i)] [∀ i : ι, Fintype (M i)] [∀ i : ι, Fintype (R i)] : Type :=
+abbrev MixStrategyProfile
+    (T A M R : ι → Type)
+    [∀ i : ι, Fintype (T i)] [∀ i : ι, Fintype (A i)] [∀ i : ι, Fintype (M i)]
+    [∀ i : ι, Fintype (R i)] :
+    Type :=
   ∀ i : ι, FinDist (PureStrat T A M R i)
 
 /-- `play d s t` returns the distribution of action profiles when types are `t` and players play pure strategies `s` with device `d`. -/
-def play (d : Device M R) (s : ∀ i : ι, PureStrat T A M R i) (t : ∀ i : ι, T i) : FinDist (∀ i : ι, A i) :=
+def play
+    (d : Device M R)
+    (s : ∀ i : ι, PureStrat T A M R i)
+    (t : ∀ i : ι, T i) :
+    FinDist (∀ i : ι, A i) :=
   -- Step 1: each player `i` reports a message based on their own type.
   let m : ∀ i : ι, M i := fun (i : ι) => (s i).report (t i)
   -- Step 2: the device maps the message profile to a distribution of signal profiles.
@@ -65,7 +75,11 @@ def play (d : Device M R) (s : ∀ i : ι, PureStrat T A M R i) (t : ∀ i : ι,
   FinDist.map respond signals
 
 /-- `outcome d π t` returns the distribution of action profiles when types are `t` and players play mixed strategies `π` with device `d`. -/
-def outcome (d : Device M R) (π : MixStrategyProfile T A M R) (t : ∀ i : ι, T i) : FinDist (∀ i : ι, A i) :=
+def outcome
+    (d : Device M R)
+    (π : MixStrategyProfile T A M R)
+    (t : ∀ i : ι, T i) :
+    FinDist (∀ i : ι, A i) :=
   FinDist.bind (FinDist.pi π) (fun (s : ∀ i : ι, PureStrat T A M R i) => play d s t)
 
 /-- `payoff G d π i` returns player `i`'s expected payoff (over types and actions). -/
@@ -78,12 +92,19 @@ def payoff (G : BayesGame T A) (d : Device M R) (π : MixStrategyProfile T A M R
 
 
 /-- `IsCommunicationEq G d π` says no player `i` gains by switching to another mixed strategy `ρ`. -/
-def IsCommunicationEq (G : BayesGame T A) (d : Device M R) (π : MixStrategyProfile T A M R) : Prop :=
+def IsCommunicationEq
+    (G : BayesGame T A)
+    (d : Device M R)
+    (π : MixStrategyProfile T A M R) :
+    Prop :=
   ∀ (i : ι) (ρ : FinDist (PureStrat T A M R i)),
     payoff G d (Function.update π i ρ) i ≤ payoff G d π i
 
 /-- `IsCommunicationEqOutcome G μ` says `μ` is the outcome of some communication equilibrium with some device. -/
-def IsCommunicationEqOutcome (G : BayesGame T A) (μ : (∀ j : ι, T j) → FinDist (∀ j : ι, A j)) : Prop :=
+def IsCommunicationEqOutcome
+    (G : BayesGame T A)
+    (μ : (∀ j : ι, T j) → FinDist (∀ j : ι, A j)) :
+    Prop :=
   ∃ (M R : ι → Type) (_ : ∀ i : ι, Fintype (M i)) (_ : ∀ i : ι, Fintype (R i))
     (d : Device M R) (π : MixStrategyProfile T A M R),
     IsCommunicationEq G d π ∧ ∀ (t : ∀ j : ι, T j), outcome d π t = μ t

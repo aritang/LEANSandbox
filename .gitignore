@@ -1,6 +1,15 @@
+# build output
 /.lake
-/EconLEAN/EconCSLib/
-/EconLEAN/matheconlib/
-/EconLEAN/Econlib/
+
+# local only: other people's libraries and tools
+/EconLEAN/
 /paperproof/
+
+# local only: personal scratch / coursework
+/LEANSandbox/
+/LEANSandbox.lean
+/ExampleSubProject/
+/ExampleSubProject.lean
+
+# macOS
 .DS_Store

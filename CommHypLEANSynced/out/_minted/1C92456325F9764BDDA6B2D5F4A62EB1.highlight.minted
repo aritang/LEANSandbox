@@ -1,0 +1,6 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k+kn}{structure}\PYG{+w}{ }\PYG{n}{FinDist}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{α}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Type}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{[}\PYG{n}{Fintype}\PYG{+w}{ }\PYG{n}{α}\PYG{o}{]}\PYG{+w}{ }\PYG{k+kn}{where}
+\PYG{+w}{  }\PYG{n}{w}\PYG{+w}{       }\PYG{o}{:}\PYG{+w}{ }\PYG{n}{α}\PYG{+w}{ }\PYG{n+nb+bp}{→}\PYG{+w}{ }\PYG{n}{ℝ}
+\PYG{+w}{  }\PYG{n}{nonneg}\PYG{+w}{  }\PYG{o}{:}\PYG{+w}{ }\PYG{n+nb+bp}{∀}\PYG{+w}{ }\PYG{n}{a}\PYG{o}{,}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{+w}{ }\PYG{n+nb+bp}{≤}\PYG{+w}{ }\PYG{n}{w}\PYG{+w}{ }\PYG{n}{a}
+\PYG{+w}{  }\PYG{n}{sum\PYGZus{}one}\PYG{+w}{ }\PYG{o}{:}\PYG{+w}{ }\PYG{n+nb+bp}{∑}\PYG{+w}{ }\PYG{n}{a}\PYG{o}{,}\PYG{+w}{ }\PYG{n}{w}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{n+nb+bp}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}
+\end{MintedVerbatim}

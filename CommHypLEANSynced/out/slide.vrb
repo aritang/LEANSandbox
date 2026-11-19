@@ -1,0 +1,16 @@
+\frametitle{What the paper hid}
+On paper, ``$i$ deviates, others keep playing'' is one symbol: $(\sigma_i', \sigma_{-i})$.
+
+  \vspace{0.4em}
+  In Lean, it is \texttt{Function.update π i ρ}, and pushing it through the product needs
+\begin{minted}{lean4}
+lemma pi_update_bind (μ : ∀ i, FinDist (X i)) (i : ι)
+    (ν : FinDist (X i)) (F : (∀ j, X j) → FinDist γ) :
+    (§$\bigotimes$§ (Function.update μ i ν)) >>= F
+      = ν >>= (fun x => (§$\bigotimes$§ μ) >>= (fun s => F (Function.update s i x)))
+\end{minted}
+  \muted{plus four bookkeeping lemmas splitting $s$ into $(s_i, s_{-i})$ via \texttt{Equiv.piSplitAt}.}
+
+  \vspace{0.8em}
+  Meanwhile the equilibrium argument itself: \alert{about 5 lines}.\\
+  \muted{Easy on paper and hard in Lean are inverted.}

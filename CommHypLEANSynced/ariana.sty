@@ -1,0 +1,204 @@
+\mode<presentation>
+
+% --- Basic setup flags ---
+\newif\ifbeamer@secheader
+\beamer@secheaderfalse
+
+\ProcessOptionsBeamer
+
+% --- Theme setup ---
+\useoutertheme[footline=authorinstitutetitle,subsection=false]{smoothbars}
+\useinnertheme{circles}
+
+% --- Custom footline: shows author, institute, frame number ---
+\makeatletter
+\newcommand{\frameofframes}{/}
+\newcommand{\setframeofframes}[1]{\renewcommand{\frameofframes}{#1}}
+
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=0.3cm,rightskip=0.3cm plus1fil]{footline}%
+    \usebeamerfont{footline}%
+    \insertshortauthor{} \,|\, \insertshorttitle%
+    \hfill%
+    \insertshortinstitute
+  \end{beamercolorbox}
+}
+\makeatother
+
+% FONTS ————————————————————————————————————————————————————————————
+% Requires XeLaTeX or LuaLaTeX
+% Uses Product Sans from ~/Library/Fonts/
+
+\RequirePackage{fontspec}
+
+\setsansfont[
+  Path = /Users/tchaikovskiana/Library/Fonts/,
+  Extension = .ttf,
+  UprightFont = *,
+  ItalicFont = {Product Sans Italic},
+  BoldFont = {Product Sans Bold},
+  BoldItalicFont = {Product Sans Bold Italic},
+]{Product Sans Regular}
+
+\setmainfont[
+  Path = /Users/tchaikovskiana/Library/Fonts/,
+  Extension = .ttf,
+  UprightFont = *,
+  ItalicFont = {Product Sans Italic},
+  BoldFont = {Product Sans Bold},
+  BoldItalicFont = {Product Sans Bold Italic},
+]{Product Sans Regular}
+
+\newfontfamily\ProductSansSpaced[
+  Path = /Users/tchaikovskiana/Library/Fonts/,
+  Extension = .ttf,
+  LetterSpace = 3
+]{Product Sans Regular}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+% FONT SIZES — Systematically smaller ————————————————————————————————
+\setbeamerfont{title}{size=\Large,family=\ProductSansSpaced}
+\setbeamerfont{subtitle}{size=\normalsize,family=\ProductSansSpaced}
+\setbeamerfont{frametitle}{size=\normalsize,family=\ProductSansSpaced}
+\setbeamerfont{framesubtitle}{size=\small,family=\ProductSansSpaced}
+
+% Body and UI font styling
+\setbeamerfont{normal text}{size=\small,family=\sffamily}
+\setbeamerfont{author}{size=\small,family=\sffamily}
+\setbeamerfont{institute}{size=\footnotesize,family=\sffamily}
+\setbeamerfont{date}{size=\footnotesize,family=\sffamily}
+\setbeamerfont{section in toc}{size=\normalsize,family=\sffamily}
+\setbeamerfont{subsection in toc}{size=\small,family=\sffamily}
+\setbeamerfont{block title}{size=\normalsize,family=\sffamily}
+\setbeamerfont{block body}{size=\small,family=\sffamily}
+\setbeamerfont{caption}{size=\scriptsize,family=\sffamily}
+\setbeamerfont{caption name}{size=\scriptsize,family=\sffamily}
+\setbeamerfont{footnote}{size=\tiny,family=\sffamily}
+\setbeamerfont{item}{size=\small,family=\sffamily}
+\setbeamerfont{enumerate item}{size=\small,family=\sffamily}
+\setbeamerfont{description item}{size=\small,family=\sffamily}
+\setbeamerfont{headline}{size=\tiny,family=\sffamily}
+\setbeamerfont{footline}{size=\tiny,family=\sffamily}
+\setbeamerfont{bibliography entry author}{size=\scriptsize,family=\sffamily}
+\setbeamerfont{bibliography entry title}{size=\scriptsize,family=\sffamily}
+\setbeamerfont{bibliography entry location}{size=\scriptsize,family=\sffamily}
+\setbeamerfont{bibliography entry note}{size=\scriptsize,family=\sffamily}
+
+\usepackage{unicode-math}
+
+% ====================================================================================
+% COLORS —————————————————————————————————————————————————————————————
+\usepackage{xcolor}
+
+\xdefinecolor{barbiepink}{RGB}{224, 33, 138}
+\xdefinecolor{warmbeige}{RGB}{255, 253, 250}
+\xdefinecolor{deeptextgray}{RGB}{30, 30, 30}
+\xdefinecolor{dimgray}{RGB}{102, 102, 102}
+\xdefinecolor{navyblue}{RGB}{0, 0, 128}
+\xdefinecolor{lightbarbiepink}{RGB}{252, 222, 238}
+
+% ====================================================================================
+% STYLE SETTINGS ————————————————————————————————————————————————————————
+\setbeamercolor{background canvas}{bg=warmbeige}
+\setbeamercolor{normal text}{fg=deeptextgray,bg=warmbeige}
+\setbeamercolor{structure}{fg=deeptextgray}
+
+\setbeamercolor{frametitle}{fg=deeptextgray,bg=warmbeige}
+\setbeamercolor{title}{fg=black,bg=lightbarbiepink}
+\setbeamercolor{subtitle}{fg=deeptextgray}
+\setbeamertemplate{frametitle}{\centering\insertframetitle}
+\setbeamertemplate{title page}[default][center]
+
+\setbeamercolor{author}{fg=deeptextgray}
+\setbeamercolor{institute}{fg=deeptextgray}
+\setbeamercolor{date}{fg=deeptextgray}
+
+\setbeamercolor{footline}{bg=warmbeige,fg=dimgray}
+
+\setbeamercolor{block title}{fg=deeptextgray,bg=warmbeige}
+\setbeamercolor{block body}{fg=deeptextgray,bg=warmbeige}
+\setbeamercolor*{block title example}{fg=dimgray,bg=warmbeige}
+\setbeamercolor*{block body example}{fg=deeptextgray,bg=warmbeige}
+
+\setbeamercolor{section in toc}{fg=deeptextgray}
+\setbeamercolor{subsection in toc}{fg=deeptextgray}
+\setbeamercolor{item}{fg=dimgray}
+
+\setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{caption}[numbered]
+
+% ====================================================================================
+% SECTION HEADERS ——————————————————————————————————————————————————————
+
+\AtBeginSection[]{
+  \begin{frame}[plain]
+    \vspace{0.5cm}
+    \begin{center}
+      \colorbox{lightbarbiepink}{%
+        \hspace{1.5em}%
+        \parbox{0.85\linewidth}{
+          \centering
+          \vspace{0.8em}
+          {\usebeamerfont{title}\color{deeptextgray}\secname}
+          \vspace{0.8em}
+        }%
+        \hspace{1.5em}%
+      }
+    \end{center}
+  \end{frame}
+}
+
+\AtBeginSubsection[]{
+  \begin{frame}[plain]
+    \centering
+    \vspace{1cm}
+    {\usebeamerfont{frametitle}\color{deeptextgray}\subsecname}
+    \vspace{0.5cm}
+    \par
+  \end{frame}
+}
+
+% ====================================================================================
+% CODE BLOCKS (minted, dark) ——————————————————————————————————————————————
+% Requires -shell-escape and Pygments. Every \begin{minted}...\end{minted}
+% is wrapped in a rounded dark box with a pink accent rule.
+
+\setmonofont{Menlo}[Scale=MatchLowercase] % has ∀ → ℝ ∑ μ π for Lean code
+
+\RequirePackage{minted}
+\RequirePackage[most]{tcolorbox}
+
+\xdefinecolor{codebg}{RGB}{40, 42, 54}      % dracula background
+\xdefinecolor{codefg}{RGB}{248, 248, 242}   % dracula foreground
+
+\setminted{
+  style=dracula,
+  fontsize=\scriptsize,
+  breaklines,
+  breaksymbolleft={},
+  escapeinside=§§,
+  mathescape,
+}
+
+\tcbset{
+  arianacode/.style={
+    enhanced, breakable=false,
+    colback=codebg, colframe=codebg, coltext=codefg,
+    arc=3pt, boxrule=0pt,
+    left=7pt, right=6pt, top=4pt, bottom=4pt,
+    before skip=4pt, after skip=6pt,
+    borderline west={2pt}{0pt}{barbiepink},
+  }
+}
+
+\BeforeBeginEnvironment{minted}{\begin{tcolorbox}[arianacode]}
+\AfterEndEnvironment{minted}{\end{tcolorbox}}
+
+% Inline code: \code{...} as a small dark pill
+\newtcbox{\code}{on line, colback=codebg, colframe=codebg, coltext=codefg,
+  arc=2pt, boxrule=0pt, left=2pt, right=2pt, top=1pt, bottom=1pt,
+  fontupper=\ttfamily\footnotesize}
+
+\mode<all>

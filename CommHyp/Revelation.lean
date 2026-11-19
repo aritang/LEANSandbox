@@ -87,6 +87,83 @@ def deviateMixed
     FinDist (PureStrat T A M R i) :=
   (σ.prod ρ).map (fun p => deviate p.2 p.1)
 
+/-- `_resample_bind` (bookkeeping): drawing `y ~ μ i` and `s ~ ⨂ μ`, then using `Function.update s i y`, is the same as drawing `s ~ ⨂ μ`.
+
+⊢ μ i >>= (fun y ↦ (⨂ μ) >>= (fun s ↦ G (Function.update s i y))) = (⨂ μ) >>= G -/
+lemma _resample_bind
+    {X : ι → Type} [∀ j : ι, Fintype (X j)] {γ : Type} [Fintype γ]
+    (μ : ∀ j : ι, FinDist (X j))
+    (i : ι)
+    (G : (∀ j : ι, X j) → FinDist γ) :
+    FinDist.bind (μ i) (fun (y : X i) =>
+        FinDist.bind (FinDist.pi μ) (fun (s : ∀ j : ι, X j) =>
+          G (Function.update s i y)))
+      = FinDist.bind (FinDist.pi μ) G := by
+  rw [← FinDist.pi_update_bind μ i (μ i) G, Function.update_eq_self]
+
+/-- `_play_canonical_update` (bookkeeping): with `d*`, if `i` plays `x` and everyone else is truthful, the outcome is `outcome d π t'` with `t' = Function.update t i (x.report (t i))`, then `i`'s action replaced by `x.act (t i) (x.report (t i)) (a i)`. -/
+lemma _play_canonical_update
+    (d : Device M R)
+    (π : MixStrategyProfile T A M R)
+    (i : ι)
+    (x : PureStrat T A T A i)
+    (t : ∀ j : ι, T j) :
+    play (canonical d π) (Function.update (fun (j : ι) => truthful j) i x) t
+      = FinDist.map
+          (fun (a : ∀ j : ι, A j) =>
+            Function.update a i (x.act (t i) (x.report (t i)) (a i)))
+          (outcome d π (Function.update t i (x.report (t i)))) := by
+  -- Step 1: the reported types are `t' = Function.update t i (x.report (t i))`.
+  have hm : (fun (j : ι) => (Function.update (fun (j : ι) => truthful j) i x j).report (t j))
+      = Function.update t i (x.report (t i)) := by
+    funext j
+    by_cases h : j = i
+    · subst h
+      simp
+    · simp [h, truthful]
+  unfold play canonical
+  simp only
+  rw [hm]
+  -- Step 2: the responses agree player by player.
+  congr 1
+  funext a j
+  by_cases h : j = i
+  · subst h
+    simp
+  · simp [h, truthful]
+
+omit [∀ i : ι, Fintype (T i)] [∀ i : ι, Fintype (M i)] in
+/-- `_play_deviate` (bookkeeping): with `d`, if `i` plays `deviate x (s i)` and everyone else plays `s`, the outcome is `play d s t'` with `t' = Function.update t i (x.report (t i))`, then `i`'s action replaced by `x.act (t i) (x.report (t i)) (a i)`. -/
+lemma _play_deviate
+    (d : Device M R)
+    (s : ∀ j : ι, PureStrat T A M R j)
+    (i : ι)
+    (x : PureStrat T A T A i)
+    (t : ∀ j : ι, T j) :
+    play d (Function.update s i (deviate x (s i))) t
+      = FinDist.map
+          (fun (a : ∀ j : ι, A j) =>
+            Function.update a i (x.act (t i) (x.report (t i)) (a i)))
+          (play d s (Function.update t i (x.report (t i)))) := by
+  -- Step 1: the messages are the same on both sides.
+  have hm : (fun (j : ι) => (Function.update s i (deviate x (s i)) j).report (t j))
+      = (fun (j : ι) => (s j).report (Function.update t i (x.report (t i)) j)) := by
+    funext j
+    by_cases h : j = i
+    · subst h
+      simp [deviate]
+    · simp [h]
+  unfold play
+  simp only
+  rw [FinDist.map_map, hm]
+  -- Step 2: the responses agree player by player.
+  congr 1
+  funext r j
+  by_cases h : j = i
+  · subst h
+    simp [deviate]
+  · simp [h]
+
 /-- lemma `canonical_deviation_outcome_equivalence`:
 Fix
 d : Device M R
@@ -105,8 +182,36 @@ lemma canonical_deviation_outcome_equivalence
     (t : ∀ j : ι, T j) :
     outcome (canonical d π) (Function.update truthfulProfile i ρ) t
       = outcome d (Function.update π i (deviateMixed ρ (π i))) t := by
-  simp [canonical, ]
-  sorry
+  -- Step 1: split off player `i`'s draw on both sides (`pi_update_bind`).
+  unfold outcome
+  rw [FinDist.pi_update_bind, FinDist.pi_update_bind]
+  -- Step 2: L: everyone else is truthful for sure (`pi_pure`, `pure_bind`).
+  unfold truthfulProfile
+  rw [FinDist.pi_pure (fun (j : ι) => truthful j)]
+  simp only [FinDist.pure_bind]
+  -- Step 3: R: draw `y ~ π i` and `x ~ ρ` separately (`bind_map`, `prod_bind`), then draw `x` first (`bind_comm`).
+  unfold deviateMixed
+  rw [FinDist.bind_map, FinDist.prod_bind, FinDist.bind_comm]
+  -- Step 4: fix `x`; compare the two sides.
+  congr 1
+  funext x
+  -- Step 5: L: rewrite with `_play_canonical_update`, then push `map` inside (`map_bind`).
+  rw [_play_canonical_update, outcome, FinDist.map_bind]
+  -- Step 6: L: fold `map … (play d s t')` back into `play d (Function.update s i (deviate x (s i))) t` (`← _play_deviate`).
+  simp only [Function.comp, ← _play_deviate]
+  -- Step 7: L: `y` replaces `s i` in `s`, so `⨂ π` is the same as drawing `y ~ π i` then `s ~ ⨂ π` (`_resample_bind`); now L = R.
+  rw [← _resample_bind π i (fun (s : ∀ j : ι, PureStrat T A M R j) => play d (Function.update s i (deviate x (s i))) t)]
+  simp only [Function.update_idem, Function.update_self]
+/- Short form:
+  unfold outcome truthfulProfile deviateMixed
+  rw [FinDist.pi_update_bind, FinDist.pi_update_bind, FinDist.pi_pure]
+  simp only [FinDist.pure_bind]
+  rw [FinDist.bind_map, FinDist.prod_bind, FinDist.bind_comm]
+  congr 1; funext x
+  rw [_play_canonical_update, outcome, FinDist.map_bind]
+  simp only [Function.comp, ← _play_deviate]
+  rw [← _resample_bind π i (fun s => play d (Function.update s i (deviate x (s i))) t)]
+  simp only [Function.update_idem, Function.update_self] -/
 
 
 /-- theorem `revelation_principle_canonical`: if `π` is a communication equilibrium with `d`, truthful play is one with `d*`, with the same outcome. -/
